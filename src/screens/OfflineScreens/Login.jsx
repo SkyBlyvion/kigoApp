@@ -19,6 +19,7 @@ const Login = () => {
 
   const handleSubmit = (event) => { 
     event.preventDefault() // empêche le fonctionnement par defaut du formulaire
+    console.log({ email, password});
 
     setIsLoading(true);
     // route de l'api; class RegistrationController
@@ -26,10 +27,13 @@ const Login = () => {
       email,
       password
     }).then((response)=>{
+      console.log('response', response);
       if(response.data.email){
         const user = {
           userId: response.data.id,
           email: response.data.email,
+          lastname: response.data.lastname,
+          firstname: response.data.firstname
         }
 
         try {
@@ -63,7 +67,7 @@ const Login = () => {
           <div className='flex items-center justify-center pt-5'>
            { isLoading ? <ButtonLoader/> : 
             <button type='submit' className='bg-green hover:bg-green_top text-white font-bold py-2 px-4 rounded'>
-              S'enregistrer
+              Connexion
             </button>}
           </div>
       </form>

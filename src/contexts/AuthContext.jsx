@@ -5,9 +5,12 @@ import { USER_INFOS } from "../constants/appConstant";
 const AuthContext = createContext({
     userId: '', // state
     email: '', // state
-    
+    lastname: '',
+    firstname: '',
     setUserId: () => {}, // method to update state userId
     setEmail: () => {}, // method to update state email
+    setLastName: () => {}, // method to update state lastname
+    setFirstName: () => {}, // method to update state firstname
     signIn: async () => {}, // method to sign in
     singOut: async () => {}, // method to sign out
 });
@@ -16,11 +19,15 @@ const AuthContext = createContext({
 const AuthContextProvider = ({children}) => {
     const [userId, setUserId] = useState('');
     const [email, setEmail] = useState('');
+    const [lastname, setLastName] = useState('');
+    const [firstname, setFirstName] = useState('');
 
     const signIn = async (user) => {
         try {
             setUserId(user.userId);
             setEmail(user.email);
+            setLastName(user.lastname);
+            setFirstName(user.firstname);
             localStorage.setItem(USER_INFOS, JSON.stringify(user));
         } catch (error) {
             throw new Error(`Error while signing in: ${error}`);
@@ -31,6 +38,8 @@ const AuthContextProvider = ({children}) => {
         try {
             setUserId('');
             setEmail('');
+            setLastName('');
+            setFirstName('');
             localStorage.removeItem(USER_INFOS);
         } catch (error) {
             throw new Error(`Error while signing out: ${error}`);
@@ -41,6 +50,10 @@ const AuthContextProvider = ({children}) => {
     const value = {
         userId,
         email,
+        lastname,
+        firstname,
+        setLastName,
+        setFirstName,
         setUserId,
         setEmail,
         signIn,

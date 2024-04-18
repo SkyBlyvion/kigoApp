@@ -33,6 +33,7 @@ const Register = () => {
         const user = {
           userId: response.data.id,
           email: response.data.email
+          
 
         }
 
