@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { apiRoot } from '../../constants/apiConstant';
+import GoSVG from '/documentation/svg/GO.svg'; // Import the SVG
+
 
 const Login = () => {
 
@@ -67,15 +69,17 @@ const Login = () => {
         <CustomInput state={email} label="Email" type="email" callable={(event) => setEmail(event.target.value)} />
         {/* input pour password */}
         <CustomInput state={password} label="Mot de passe" type="password" callable={(event) => setPassword(event.target.value)} />
+        {/* TODO: mdp oublié ? */}
+        <Link to='/' className=" hover:text-orange">Mot de passe oublié ?</Link>
 
-        <p className='text-black font'>Vous n'avez pas de compte ?<Link to='/register' className='text-black font-bold hover:text-orange'> S'enregistrer</Link></p>
 
         <div className='flex items-center justify-center pt-5'>
           {isLoading ? <ButtonLoader /> :
-            <button type='submit' className='bg-orange_top hover:bg-orange text-white font-bold py-2 px-4 rounded'>
-              Connexion
+            <button type='submit' className=' text-white  '>
+              <img src={GoSVG} alt="Go" />
             </button>}
         </div>
+              <p className='text-black font'>Pas de compte ?<Link to='/register' className='text-black font-bold hover:text-orange'> S'enregistrer</Link></p>
 
       </form>
 
