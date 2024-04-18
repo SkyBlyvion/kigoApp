@@ -23,7 +23,7 @@ const AppRouter = () => {
     const [inSession, setInSession] = useState(null);
     
     // on recupere les infos de notre authContext
-    const { userId, setUserId, setEmail, setNickname} = useAuthContext();
+    const { userId, setUserId, setEmail} = useAuthContext();
 
     // on va regarder si on a des infos dans le localstorage
     const getUserInfos = async () => {
@@ -33,7 +33,6 @@ const AppRouter = () => {
         if(user){
             setUserId(user.userId);
             setEmail(user.email);
-            setNickname(user.nickname);
             setInSession(true); // true signifie que l'utilisateur est connecté
         }else{
             setInSession(false); // personne en session, false
