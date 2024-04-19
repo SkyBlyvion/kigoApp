@@ -7,7 +7,7 @@ export const checkUser = async (userInfo) => {
         const response = await axios.get(`${apiUrl}/users/${userInfo.userId}`);
         const user = response.data;
         // maintenant on compare les données de la bdd avec celles en session
-        if(user.email === userInfo.email && user.nickname === userInfo.nickname){
+        if(user.email === userInfo.email && user.password === userInfo.password){
             return true;
         }else{
             return false;

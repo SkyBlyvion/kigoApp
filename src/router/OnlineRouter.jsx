@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import ErrorPage from "../screens/ErrorScreens/ErrorPage";
 import Home from "../screens/OnlineScreens/Home";
-import Profil from "../screens/OnlineScreens/Profil";
+import Account from "../screens/OnlineScreens/Account";
 
 const OnlineRouter = createBrowserRouter([
     {
@@ -19,8 +19,8 @@ const OnlineRouter = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: "/profil",
-                element: <Profil />,
+                path: "/account/:id",
+                element: <Account />
             },
         ]
     }

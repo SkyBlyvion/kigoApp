@@ -25,6 +25,7 @@ export const {setLoading, setUser} = userSlice.actions;
 // méthode qui recupere les infos de l'user
 // récupére l'id de l'user
 export const fetchUser = (id) => async dispatch => {
+    console.log('response', id);
     try {
         dispatch(setLoading(true));
         const response = await axios.get(`${apiUrl}/users/${id}`);

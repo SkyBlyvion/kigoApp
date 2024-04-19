@@ -6,3 +6,6 @@ export const apiUrl =`${apiRoot}/api`;
 
 // url pour les images du site
 export const imageUrl = `${apiRoot}/images`;
+
+// url pour les avatars
+export const avatarUrl = `${apiRoot}/images/avatars`;
