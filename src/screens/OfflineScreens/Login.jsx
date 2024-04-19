@@ -59,27 +59,25 @@ const Login = () => {
   return (
     <div className='flex flex-1 flex-col h-screen justify-start items-center bg-white relative'>
 
-      {/* TODO: ajouter le svg */}
-      <div className="mb-10 mt-5">
+      <div className="mb-5 mt-5">
         <img src="/documentation/logos/logo.png" alt="Kigo Logo" />
       </div>
-
+      <h3 className='font-bold '>Connexion</h3>
       <form onSubmit={handleSubmit} className='max-w-md mx-auto'>
         {/* input pour l'email */}
         <CustomInput state={email} label="Email" type="email" callable={(event) => setEmail(event.target.value)} />
         {/* input pour password */}
         <CustomInput state={password} label="Mot de passe" type="password" callable={(event) => setPassword(event.target.value)} />
-        {/* TODO: mdp oublié ? */}
         <Link to='/' className=" hover:text-orange">Mot de passe oublié ?</Link>
 
 
-        <div className='flex items-center justify-center pt-5'>
+        <div className='flex items-center justify-center pt-10'>
           {isLoading ? <ButtonLoader /> :
             <button type='submit' className=' text-white  '>
               <img src={GoSVG} alt="Go" />
             </button>}
         </div>
-              <p className='text-black font'>Pas de compte ?<Link to='/register' className='text-black font-bold hover:text-orange'> S'enregistrer</Link></p>
+        <Link to='/register' className='flex items-center justify-center pt-3 text-black font-bold hover:text-orange'> S'enregistrer</Link>
 
       </form>
 
