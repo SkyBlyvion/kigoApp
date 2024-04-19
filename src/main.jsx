@@ -10,6 +10,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     {/* on enregistre le contexte de session */}
     <AuthContextProvider>
       {/* on enregistre le store */}
+      
       {/* on enregistre le router */}
       <AppRouter />
     </AuthContextProvider>
