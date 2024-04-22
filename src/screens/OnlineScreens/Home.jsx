@@ -11,10 +11,8 @@ const Home = () => {
    
     <ul>
       <li><Link to={`/account/${id}`}>Profil</Link></li>
-      <li><Link to='/'>Liste Projets</Link></li>
-      <li><Link to='/'>Mes Projets</Link></li>
-      <li><Link to='/'>Detail projet</Link></li>
-
+      <li><Link to='/project'>Liste Projets</Link></li>
+      <li><Link to='/post'>Liste Posts</Link></li>
     </ul>
     
     </>

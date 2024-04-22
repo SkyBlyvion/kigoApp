@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { USER_INFOS } from './constants/appConstant';
 import { useAuthContext } from './contexts/AuthContext';
 import { checkUser } from './services/userService';
+import BottomTabNav from './components/BottomTabBar';
 
 
 const App = () => {
@@ -30,7 +31,10 @@ const App = () => {
     
 
   return (
-    <Outlet />
+    <>
+      <Outlet />
+      <BottomTabNav/>
+    </>
   )
 }
 
