@@ -14,5 +14,9 @@
 }
 
 .icon-large {
-    font-size: 2rem;
+    font-size: 40px;
+}
+
+.border-b-1 {
+    border-bottom-width: 1px;
 }

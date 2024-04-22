@@ -14,7 +14,7 @@ export default {
         orange: 'rgba(249, 79, 13, 1)',
         orange_top: 'rgba(221, 93, 46, 1)',
         white_1: '#FAF3DD',
-        white_2: '#FABB96',
+        white_2: '#FACAAA',
         black: 'rgba(24, 24, 24, 1)',
         black_05: 'rgba(24, 24, 24, 0.5)',
         white: 'rgba(245, 245, 245, 1)',
