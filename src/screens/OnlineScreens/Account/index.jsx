@@ -37,9 +37,10 @@ const Account = () => {
 
   if (loading) return <PageLoader />
 
+  //TODO: update the media table, GROUPS and Relations
   // Sample social links data structure
   const socialLinks = {
-    teams: user.teams,
+    teams: user.medias.teams,
     linkedin: user.linkedin,
     instagram: user.instagram,
     behance: user.behance,
@@ -101,7 +102,7 @@ const Account = () => {
 
         {/* TODO:second bio, likely a hint about the user */}
         <div className='flex justify-center items-center'>
-          <p className=" border-orange border-b-1 text-orange px-2 text-xs pt-3">Je rêve de découvrir le monde en mode backpack</p>
+          <p className=" border-orange border-b-1 text-orange px-2 text-xs pt-3">Je rêve de découvrir le monde en mode backpack{user?.medias?.url_img}</p>
         </div>
 
         {/* social links */}
