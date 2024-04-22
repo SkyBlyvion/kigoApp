@@ -2,3 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: "Aeonik";
+    src: url("./assets/fonts/Aeonik/AeonikTRIAL-Regular.otf");
+}
+
+@font-face {
+    font-family: "Aeonikk";
+    src: url("./assets/fonts/Aeonik/AeonikTRIAL-Bold.otf");
+    font-weight: bold;
+}
+
+.icon-large {
+    font-size: 2rem;
+}
