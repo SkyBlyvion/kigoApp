@@ -40,7 +40,7 @@ const Account = () => {
   //TODO: update the media table, GROUPS and Relations
   // Sample social links data structure
   const socialLinks = {
-    teams: user.medias.teams,
+    teams: user?.medias?.teams,
     linkedin: user.linkedin,
     instagram: user.instagram,
     behance: user.behance,
@@ -65,12 +65,14 @@ const Account = () => {
         <div className='flex flex-col items-center bg-orange w-full pb-4 '>
 
           {/* icon reglages et edit */}
+          {/* TODO:EDIT Account & Setings */}
           <div className="p-4 w-full flex justify-between items-center">
             <img src="../../../../documentation/svg/setting.svg" alt="setting" className="text-2xl" />
             <img src="../../../../documentation/svg/edit.svg" alt="edit" className="text-2xl" />
           </div>
 
           {/* image avatar */}
+          {/* TODO:EDIT Avatar ( list avatar) */}
           <div className="relative w-36 h-36 flex flex-col items-center translate-y-[40%]  ">
             <img src={imgPath} alt="avatar user" className=' object-contain rounded-full' />
           </div>
