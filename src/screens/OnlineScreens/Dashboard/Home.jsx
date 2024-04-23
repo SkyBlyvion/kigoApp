@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectUserData } from '../../../redux/user/userSelector'
 import { fetchUser } from '../../../redux/user/userSlice'
 import PageLoader from '../../../components/loader/PageLoader'
+import { MdOutlineAddCircle } from 'react-icons/md'
 
 const Home = () => {
   const id = JSON.parse(localStorage.getItem(USER_INFOS)).userId;
@@ -28,12 +29,20 @@ const Home = () => {
         <p className='text-center px-4'>Les demandes de participation à un projet ne seront visibles que par le porteur, et apparaîtront sur la page du projet, 
           et sur le tableau de bord du porteur. Ce dernier pourra accepter ou refuser les candidatures.</p>
         <br/>
+        <p>Les projets recommandées </p><br/>
+        
         <Link to='/project' className='bg-orange text-white font-bold py-2 px-4 rounded'>Liste des projets </Link><br/><br/>
         <Link to='/projectlist' className='bg-orange text-white font-bold py-2 px-4 rounded'>Ajout de Projet / Porter</Link><br/><br/>
         <Link to='/projectsuggestion' className='bg-orange text-white font-bold py-2 px-4 rounded'>Suggestion de projet</Link><br/><br/>
         <Link to='/postlist' className='bg-green text-white font-bold py-2 px-4 rounded'>Liste des posts BTN</Link><br/><br/>
         <Link to='/post' className='bg-green text-white font-bold py-2 px-4 rounded'>Ajout de Post BTN</Link><br/><br/>
         <Link to={`/account/${id}`} className='bg-orange text-white font-bold py-2 px-4 rounded'>Mon profil BTN</Link><br/><br/>
+        <Link to="/project">
+              <MdOutlineAddCircle
+                className="w-14 h-14 "
+                style={{ color: "white" }}
+              />
+            </Link>
 
       
         
