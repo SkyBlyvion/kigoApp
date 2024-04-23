@@ -2,11 +2,14 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { USER_INFOS } from '../constants/appConstant';
 import { FaEnvelope, FaHome, FaProjectDiagram, FaUser } from 'react-icons/fa';
+import { BsDash } from 'react-icons/bs';
+import { GrDashboard } from 'react-icons/gr';
+import { MdDashboard } from 'react-icons/md';
 
 const BottomTabNav = () => {
     const id = JSON.parse(localStorage.getItem(USER_INFOS)).userId;
     const tabs = [
-        { name: 'Home', href: '/', icon: <FaHome style={{ width: '20px', height: '20px' }} /> },
+        { name: 'Dash', href: '/', icon: <MdDashboard style={{ width: '20px', height: '20px' }} /> },
         { name: 'Projets', href: '/project', icon: <FaProjectDiagram style={{ width: '20px', height: '20px' }} /> },
         { name: 'Post', href: '/post', icon: <FaEnvelope style={{ width: '20px', height: '20px' }} /> },
         { name: 'Profil', href: `/account/${id}`, icon: <FaUser style={{ width: '20px', height: '20px' }} /> },

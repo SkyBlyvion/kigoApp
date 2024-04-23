@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import ErrorPage from "../screens/ErrorScreens/ErrorPage";
-import Home from "../screens/OnlineScreens/Home";
+import Home from "../screens/OnlineScreens/Dashboard/Home";
 import Account from "../screens/OnlineScreens/Account";
 import ProjectsList from "../screens/OnlineScreens/ProjectsList";
 import PostList from "../screens/OnlineScreens/PostList";

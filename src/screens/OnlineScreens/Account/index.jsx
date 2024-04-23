@@ -28,7 +28,7 @@ const Account = () => {
 
   // on recupere les states
   const { loading, user } = useSelector(selectUserData);
-  console.log('zzz', user)
+  // console.log('zzz', user)
 
   const imgPath = user?.avatar?.imagePath
     ? `${avatarUrl}/${user?.avatar?.imagePath}`
@@ -122,10 +122,12 @@ const Account = () => {
         </div>
 
 
-        {/* Réalisations */}
+        {/* Liste de post */}
         <div className="flex flex-col items-center">
+          <p className='text-left text-lg text-orange font-sans py-1'>Mes projets portés: </p>
+          <p className='text-left text-lg text-orange font-sans py-1'>Ma participation: </p>
+          <p className='text-left text-lg text-orange font-sans py-1'>Mes inspirations:</p>
           <h1 className='text-left text-lg text-orange font-sans py-1'>Mes réalisations :</h1>
-
           {/* TODO: list of réalisations */}
         </div>
 
