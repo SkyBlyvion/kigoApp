@@ -7,39 +7,38 @@ import { fetchUser } from '../../../redux/user/userSlice'
 import PageLoader from '../../../components/loader/PageLoader'
 
 const Home = () => {
-
-  // on recupere le hook
-  const dispatch = useDispatch();
-
-  // on utilise params
-  const params = useParams();
-
-  // recupere l'id depuis l'url
-  const userId = params.id
-
-  // on dispatche la requête, pour remplir les tates
-  useEffect(() => {
-    dispatch(fetchUser(userId));
-  }, [])
+  const id = JSON.parse(localStorage.getItem(USER_INFOS)).userId;
 
   // on recupere les states
   const { loading, user } = useSelector(selectUserData);
   
-  console.log('zzz', user)
+  // console.log('zzz', user)
 
   
   if (loading) return <PageLoader />
   
   return (
     <>
-      <div>Dashboard</div><br/>
-      <p>Dans ce dashboard, recommandations de projets en fonction de la compatibilité avec leurs compétences</p><br/>
-      <p>Les demandes de participation à un projet ne seront visibles que par le porteur, et apparaîtront sur la page du projet, et sur le tableau de bord du porteur. Ce dernier pourra accepter ou refuser les candidatures.</p>
-      <p>Nouveau Projets Bouton</p>
-      <p>Ajout de Projet</p>
-      <p>Acces profil</p>
-      <p></p>
-    
+      <div className='flex flex-col items-center container mb-20'>
+
+        <div className='text-3xl'>Dashboard</div><br/>
+        <p className='text-orange'>Bonjour {user?.firstname} {user?.lastname}</p>
+        <br/>
+        <p className='text-center px-4'>Dans ce dashboard, recommandations de projets en fonction de la compatibilité avec leurs compétences</p><br/>
+        <p className='text-center px-4'>Les demandes de participation à un projet ne seront visibles que par le porteur, et apparaîtront sur la page du projet, 
+          et sur le tableau de bord du porteur. Ce dernier pourra accepter ou refuser les candidatures.</p>
+        <br/>
+        <Link to='/project' className='bg-orange text-white font-bold py-2 px-4 rounded'>Liste des projets </Link><br/><br/>
+        <Link to='/projectlist' className='bg-orange text-white font-bold py-2 px-4 rounded'>Ajout de Projet / Porter</Link><br/><br/>
+        <Link to='/projectsuggestion' className='bg-orange text-white font-bold py-2 px-4 rounded'>Suggestion de projet</Link><br/><br/>
+        <Link to='/postlist' className='bg-green text-white font-bold py-2 px-4 rounded'>Liste des posts BTN</Link><br/><br/>
+        <Link to='/post' className='bg-green text-white font-bold py-2 px-4 rounded'>Ajout de Post BTN</Link><br/><br/>
+        <Link to={`/account/${id}`} className='bg-orange text-white font-bold py-2 px-4 rounded'>Mon profil BTN</Link><br/><br/>
+
+      
+        
+        
+      </div>
     </>
   )
 }
