@@ -99,7 +99,7 @@ const Account = () => {
 
         {/* bio */}
         <div className='flex justify-center items-center'>
-          <p className="border-2 border-orange text-orange px-2 py-3 rounded-xl shadow max-w-xs text-center text-sm">{user?.profil?.biography}</p>
+          <p className="border-2 border-orange text-orange px-2 py-3 rounded-xl shadow max-w-xs text-center text-sm">{user?.profil?.biography ?? 'Biographie:'}</p>
         </div>
 
         {/* TODO:second bio, likely a hint about the user */}

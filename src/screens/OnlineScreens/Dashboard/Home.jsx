@@ -8,7 +8,14 @@ import PageLoader from '../../../components/loader/PageLoader'
 import { MdOutlineAddCircle } from 'react-icons/md'
 
 const Home = () => {
+
+  const dispatch = useDispatch();
   const id = JSON.parse(localStorage.getItem(USER_INFOS)).userId;
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    dispatch(fetchUser(id));
+  }, [dispatch, id]);
 
   // on recupere les states
   const { loading, user } = useSelector(selectUserData);
@@ -23,7 +30,7 @@ const Home = () => {
       <div className='flex flex-col items-center container mb-20'>
 
         <div className='text-3xl'>Dashboard</div><br/>
-        <p className='text-orange'>Bonjour {user?.firstname} {user?.lastname}</p>
+        <p className='text-orange'>Bonjour {user?.lastname} {user?.firstname} </p>
         <br/>
         <p className='text-center px-4'>Dans ce dashboard, recommandations de projets en fonction de la compatibilité avec leurs compétences</p><br/>
         <p className='text-center px-4'>Les demandes de participation à un projet ne seront visibles que par le porteur, et apparaîtront sur la page du projet, 
