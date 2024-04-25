@@ -39,10 +39,11 @@ const Account = () => {
 
   //TODO: update the media table, GROUPS and Relations
   // Sample social links data structure
+  // {user?.contacts?.[0]?.value}
   const socialLinks = {
     teams: user?.medias?.teams,
     linkedin: user.linkedin,
-    instagram: user.instagram,
+    instagram: user?.contacts?.[0]?.value,
     behance: user.behance,
     github: user.github,
     soundcloud: user.soundcloud,
@@ -104,7 +105,7 @@ const Account = () => {
 
         {/* TODO:second bio, likely a hint about the user */}
         <div className='flex justify-center items-center'>
-          <p className=" border-orange border-b-1 text-orange px-2 text-xs pt-3">Je rêve de découvrir le monde en mode backpack</p>
+          <p className=" border-orange border-b-1 text-orange px-2 text-xs pt-3">{user?.reve ?? 'Reve:'}</p>
         </div>
 
         {/* social links */}
