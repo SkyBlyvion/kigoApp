@@ -28,7 +28,7 @@ const Account = () => {
 
   // on recupere les states
   const { loading, user } = useSelector(selectUserData);
-  // console.log('zzz', user)
+  console.log('bababaprofi', user)
 
   const imgPath = user?.avatar?.imagePath
     ? `${avatarUrl}/${user?.avatar?.imagePath}`
@@ -99,12 +99,12 @@ const Account = () => {
 
         {/* bio */}
         <div className='flex justify-center items-center'>
-          <p className="border-2 border-orange text-orange px-2 py-3 rounded-xl shadow max-w-xs text-center text-sm">{user?.profil?.biography ?? 'Biographie:'}</p>
+          <p className="border-2 border-orange text-orange px-2 py-3 rounded-xl shadow max-w-xs text-center text-sm">{user?.biographie ?? 'Biographie:'}</p>
         </div>
 
         {/* TODO:second bio, likely a hint about the user */}
         <div className='flex justify-center items-center'>
-          <p className=" border-orange border-b-1 text-orange px-2 text-xs pt-3">Je rêve de découvrir le monde en mode backpack{user?.medias?.url_img}</p>
+          <p className=" border-orange border-b-1 text-orange px-2 text-xs pt-3">Je rêve de découvrir le monde en mode backpack</p>
         </div>
 
         {/* social links */}
