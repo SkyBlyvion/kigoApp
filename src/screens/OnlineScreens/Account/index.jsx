@@ -67,8 +67,12 @@ const Account = () => {
           {/* icon reglages et edit */}
           {/* TODO:EDIT Account & Setings */}
           <div className="p-4 w-full flex justify-between items-center">
-            <img src="../../../../documentation/svg/setting.svg" alt="setting" className="text-2xl" />
-            <img src="../../../../documentation/svg/edit.svg" alt="edit" className="text-2xl" />
+            <Link to="/settings">
+              <img src="../../../../documentation/svg/setting.svg" alt="setting" className="text-2xl" />
+            </Link>
+            <Link to="/edit-info" >
+              <img src="../../../../documentation/svg/edit.svg" alt="edit" className="text-2xl" />
+            </Link>
           </div>
 
           {/* image avatar */}
@@ -116,6 +120,7 @@ const Account = () => {
                 <a key={key} href={socialLinks[key]} className="icon-large text-orange rounded-xl">
                   {socialIcons[key]}
                 </a>
+                
               ))}
             </div>
           </div>

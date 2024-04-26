@@ -10,10 +10,11 @@ import { apiRoot, apiUrl } from '../../../constants/apiConstant'
 
 const Editinfo = () => {
 
-    const { userId, email, nickname, signOut, signIn } = useAuthContext();
+    const { userId, email, signOut, signIn } = useAuthContext();
     const navigate = useNavigate();
-    const [nicknameValue, setNicknameValue] = useState(nickname);
     const [emailValue, setEmailValue] = useState(email);
+    const [firstnameValue, setFirstnameValue] = useState('');
+    const [lastnameValue, setLastnameValue] = useState('');
     const [passwordValue, setPasswordValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -25,8 +26,8 @@ const Editinfo = () => {
             const userInfo = JSON.parse(localStorage.getItem(USER_INFOS));
             const userValid = await checkUser(userInfo);
             if (userValid) {
-                // on veifie que tous les champs osient remplis
-                if (emailValue.length > 0 && nicknameValue.length > 0 && passwordValue.length > 0) {
+                // on veifie que tous les champs soient remplis
+                if (emailValue.length  > 0 && firstnameValue.length > 0 && lastnameValue.length > 0 && passwordValue.length > 0) {
                     // on se crée un tableau pour verifier le mot de passe ( checkPassword )
                     const dataCheck = {
                         id: userId,
@@ -36,7 +37,8 @@ const Editinfo = () => {
                     // on crée un objet pour le patch sans prendr ele mdp
                     const data = {
                         email: emailValue,
-                        nickname: nicknameValue
+                        firstname: firstnameValue,
+                        lastname: lastnameValue,
                     }
 
                     const headers = {
@@ -64,7 +66,8 @@ const Editinfo = () => {
                                         const user = {
                                             userId: resp.data.id,
                                             email: resp.data.email,
-                                            nickname: resp.data.nickname
+                                            lastname: resp.data.lastname,
+                                            firstname: resp.data.firstname
                                         };
                                         // mise a jour du constexte d'authentification
                                         signIn(user);
@@ -108,20 +111,23 @@ const Editinfo = () => {
     }
 
     return (
-        <div className='flex flex-1 flex-col h-screen justify-start items-center bg-black'>
-            <h2 className='text-white font-bold text-xl py-5'>Mettre à jour votre compte</h2>
+        <div className='flex flex-1 flex-col h-screen justify-start items-center bg-white'>
+            <h2 className='text-black font-bold text-xl py-5'>Mettre à jour votre compte</h2>
             <div className='text-red-600 fony-bold mb-4'>{error}</div>
             <form onSubmit={handleSubmit} className='max-w-md mx-auto'>
-                {/* input pour le nickname */}
-                <CustomInput state={nicknameValue} label="Votre Pseudo" type="text" callable={(event) => setNicknameValue(event.target.value)} />
                 {/* input pour l'email */}
                 <CustomInput state={emailValue} label="Votre Email" type="email" callable={(event) => setEmailValue(event.target.value)} />
                 {/* input pour password */}
-                <CustomInput state={passwordValue} label="Votre Password" type="password" callable={(event) => setPasswordValue(event.target.value)} />
+                <CustomInput state={passwordValue} label="Votre Mot de passe actuel(verif)" type="password" callable={(event) => setPasswordValue(event.target.value)} />
+                {/* input pour firstname */}
+                <CustomInput state={firstnameValue} label="Votre Prénom" type="text" callable={(event) => setFirstnameValue(event.target.value)} />
+                {/* input pour lastname */}
+                <CustomInput state={lastnameValue} label="Votre Nom" type="text" callable={(event) => setLastnameValue(event.target.value)} />
+                {/* input pour filiere */}
 
                 <div className='flex items-center justify-center pt-5'>
                     {isLoading ? <ButtonLoader /> :
-                        <button type='submit' className='bg-green hover:bg-green_top text-white font-bold py-2 px-4 rounded'>
+                        <button type='submit' className='bg-orange hover:bg-orange_top text-white font-bold py-2 px-4 rounded'>
                             Mettre à jour
                         </button>}
                 </div>
