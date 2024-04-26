@@ -28,7 +28,7 @@ const AppRouter = () => {
     // on va regarder si on a des infos dans le localstorage
     const getUserInfos = async () => {
         const user = JSON.parse(localStorage.getItem(USER_INFOS));
-        console.log('user', user);
+        //console.log('user', user);
 
         // on verifie si on a des infos utilisateur en localstorage
         if(user){

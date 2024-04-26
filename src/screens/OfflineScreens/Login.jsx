@@ -21,7 +21,7 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault() // empêche le fonctionnement par defaut du formulaire
-    console.log({ email, password });
+    // console.log({ email, password });
 
     setIsLoading(true);
     // route de l'api; class RegistrationController

@@ -21,7 +21,7 @@ const Register = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault() // empêche le fonctionnement par defaut du formulaire
-    console.log({ lastName, firstName, email, password });
+    // console.log({ lastName, firstName, email, password });
     setIsLoading(true);
     // route de l'api; class RegistrationController
     axios.post(`${apiRoot}/register`, {

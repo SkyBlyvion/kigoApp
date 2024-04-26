@@ -33,22 +33,20 @@ const Account = () => {
   const imgPath = user?.avatar?.imagePath
     ? `${avatarUrl}/${user?.avatar?.imagePath}`
     : `${imageUrl}/user.png`;
+  
 
-
-  if (loading) return <PageLoader />
-
-  //TODO: update the media table, GROUPS and Relations
+  //TODO: EDIT social links on profile
   // Sample social links data structure
   // {user?.contacts?.[0]?.value}
   const socialLinks = {
-    teams: user?.medias?.teams,
-    linkedin: user.linkedin,
-    instagram: user?.contacts?.[0]?.value,
-    behance: user.behance,
-    github: user.github,
-    soundcloud: user.soundcloud,
+    teams: user?.contacts?.[0]?.value,
+    linkedin: user?.contacts?.[1]?.value,
+    instagram: user?.contacts?.[2]?.value,
+    behance: user?.contacts?.[0]?.value,
+    github: user?.contacts?.[0]?.value,
+    soundcloud: user?.contacts?.[0]?.value,
   };
-
+  
   // Icons mapping for social links
   const socialIcons = {
     teams: <BsMicrosoftTeams />,
@@ -58,7 +56,8 @@ const Account = () => {
     github: <BsGithub />,
     soundcloud: <FaSoundcloud />,
   };
-
+    
+  if (loading) return <PageLoader />
   return (
     <>
       <div className="flex flex-col items-center">
