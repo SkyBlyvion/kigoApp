@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { selectUserData } from '../../../redux/user/userSelector';
 import { fetchUser } from '../../../redux/user/userSlice';
 import PageLoader from '../../../components/loader/PageLoader';
-import { avatarUrl, imageUrl } from '../../../constants/apiConstant';
+import { apiRoot, apiUrl, avatarUrl, imageUrl } from '../../../constants/apiConstant';
 import { BsBehance, BsFillPencilFill, BsGithub, BsInstagram, BsLinkedin, BsMicrosoftTeams } from 'react-icons/bs';
 import { FiBell, FiEdit, FiEdit2, FiHome, FiMessageSquare, FiSettings, FiUser } from 'react-icons/fi';
 import { FaRegHandshake, FaSoundcloud } from 'react-icons/fa';
+import axios from 'axios';
 
 const Account = () => {
 
@@ -21,19 +22,47 @@ const Account = () => {
   // recupere l'id depuis l'url
   const userId = params.id
 
+  // on recupere les states
+  const { loading, user } = useSelector(selectUserData);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [biography, setBiography] = useState('');
+
+  console.log('bababaprofi', user)
+
   // on dispatche la requête, pour remplir les tates
   useEffect(() => {
     dispatch(fetchUser(userId));
-  }, [])
+  }, [userId, dispatch]);
 
-  // on recupere les states
-  const { loading, user } = useSelector(selectUserData);
-  console.log('bababaprofi', user)
+  useEffect(() => {
+    if (user) {
+      setBiography(user.biographie ?? '');
+    }
+  }, [user]);
+
+  const handleBiographyClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleBiographyChange = (event) => {
+    setBiography(event.target.value);
+  };
+
+  const handleSaveBiography = async () => {
+    try {
+      await axios.patch(`${apiUrl}/users/${userId}`, { biographie: biography });
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating biography:', error);
+    }
+  };
+
 
   const imgPath = user?.avatar?.imagePath
     ? `${avatarUrl}/${user?.avatar?.imagePath}`
     : `${imageUrl}/user.png`;
-  
+
 
   //TODO: EDIT social links on profile
   // Sample social links data structure
@@ -46,7 +75,7 @@ const Account = () => {
     github: user?.contacts?.[0]?.value,
     soundcloud: user?.contacts?.[0]?.value,
   };
-  
+
   // Icons mapping for social links
   const socialIcons = {
     teams: <BsMicrosoftTeams />,
@@ -56,7 +85,7 @@ const Account = () => {
     github: <BsGithub />,
     soundcloud: <FaSoundcloud />,
   };
-    
+
   if (loading) return <PageLoader />
   return (
     <>
@@ -102,8 +131,29 @@ const Account = () => {
         </div>
 
         {/* bio */}
-        <div className='flex justify-center items-center'>
+        {/* <div className='flex justify-center items-center'>
           <p className="border-2 border-orange text-orange px-2 py-3 rounded-xl shadow max-w-xs text-center text-sm">{user?.biographie ?? 'Biographie:'}</p>
+        </div> */}
+
+        <div className="flex flex-col items-center">
+          {/* Biographie section */}
+          <div className='flex justify-center items-center'>
+            {isEditing ? (
+              <textarea
+                value={biography}
+                onChange={handleBiographyChange}
+                onBlur={handleSaveBiography}
+                className="border-2 border-orange text-orange px-2 py-3 rounded-xl shadow max-w-xs text-center text-sm"
+              />
+            ) : (
+              <p
+                onClick={handleBiographyClick}
+                className="border-2 border-orange text-orange px-2 py-3 rounded-xl shadow max-w-xs text-center text-sm"
+              >
+                {biography || 'Ajouter une biographie'}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* TODO:second bio, likely a hint about the user */}
@@ -120,7 +170,7 @@ const Account = () => {
                 <a key={key} href={socialLinks[key]} className="icon-large text-orange rounded-xl">
                   {socialIcons[key]}
                 </a>
-                
+
               ))}
             </div>
           </div>
