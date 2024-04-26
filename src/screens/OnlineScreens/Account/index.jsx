@@ -29,6 +29,7 @@ const Account = () => {
   const [biography, setBiography] = useState('');
 
   console.log('bababaprofi', user)
+  //L'erreur "415 Unsupported Media Type" indique que le type de contenu envoyé dans la requête HTTP n'est pas accepté par le serveur. Dans votre cas, le serveur attend un contenu de type application/merge-patch+json alors que la requête envoyée utilise application/json.
 
   // on dispatche la requête, pour remplir les tates
   useEffect(() => {
