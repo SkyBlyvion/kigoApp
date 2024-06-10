@@ -6,6 +6,7 @@ import Account from "../screens/OnlineScreens/Account";
 import ProjectsList from "../screens/OnlineScreens/ProjectsList";
 import PostList from "../screens/OnlineScreens/PostList";
 import Editinfo from "../screens/OnlineScreens/Account/Editinfo";
+import Settings from "../screens/OnlineScreens/Account/Settings";
 
 const OnlineRouter = createBrowserRouter([
     {
@@ -36,7 +37,12 @@ const OnlineRouter = createBrowserRouter([
             {
                 path: "/edit-info",
                 element: <Editinfo />
+            },
+            {
+                path: "/settings",
+                element: <Settings />
             }
+            
         ]
     }
 ])
