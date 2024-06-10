@@ -27,7 +27,9 @@ const Account = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [biography, setBiography] = useState('');
 
-
+  // Ajouter les états pour "Rêve"
+  const [isEditingReve, setIsEditingReve] = useState(false);
+  const [reve, setReve] = useState('');
 
   // on dispatche la requête, pour remplir les states
   useEffect(() => {
@@ -37,6 +39,7 @@ const Account = () => {
   useEffect(() => {
     if (user) {
       setBiography(user.biographie ?? '');
+      setReve(user.reve ?? '');
     }
   }, [user]);
 
@@ -62,6 +65,32 @@ const Account = () => {
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating biography:', error);
+    }
+  };
+
+  // Ajouter les fonctions pour "Rêve"
+  const handleReveClick = () => {
+    setIsEditingReve(true);
+  };
+
+  const handleReveChange = (event) => {
+    setReve(event.target.value);
+  };
+
+  const handleSaveReve = async () => {
+    try {
+      await axios.patch(
+        `${apiUrl}/users/${userId}`,
+        { reve: reve },
+        {
+          headers: {
+            'Content-Type': 'application/merge-patch+json'
+          }
+        }
+      );
+      setIsEditingReve(false);
+    } catch (error) {
+      console.error('Error updating reve:', error);
     }
   };
 
@@ -160,7 +189,21 @@ const Account = () => {
 
         {/* TODO:second bio, likely a hint about the user */}
         <div className='flex justify-center items-center'>
-          <p className=" border-orange border-b-1 text-orange px-2 text-xs pt-3">{user?.reve ?? 'Reve:'}</p>
+          {isEditingReve ? (
+            <textarea
+              value={reve}
+              onChange={handleReveChange}
+              onBlur={handleSaveReve}
+              className="border-2 border-orange text-orange px-2 py-3 rounded-xl shadow max-w-xs text-center text-sm"
+            />
+          ) : (
+            <p
+              onClick={handleReveClick}
+              className="border-orange border-b-1 text-orange px-2 text-xs pt-3"
+            >
+              {reve || 'Ajouter un rêve'}
+            </p>
+          )}
         </div>
 
         {/* social links */}
