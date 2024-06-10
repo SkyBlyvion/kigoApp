@@ -11,14 +11,9 @@ const Editinfo = () => {
   const navigate = useNavigate();
   const [filiere, setFiliere] = useState('');
   const [competences, setCompetences] = useState([]);
-  const [socialLinks, setSocialLinks] = useState({
-    linkedin: '',
-    github: '',
-    instagram: '',
-    behance: '',
-    soundcloud: '',
-    teams: ''
-  });
+  const [socialLinks, setSocialLinks] = useState([]);
+  const [newSocialLinkType, setNewSocialLinkType] = useState('');
+  const [newSocialLinkValue, setNewSocialLinkValue] = useState('');
   const [filieres, setFilieres] = useState([]);
   const [allCompetences, setAllCompetences] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,11 +27,7 @@ const Editinfo = () => {
         const user = response.data;
         setFiliere(user.filiere);
         setCompetences(user.competences.map(comp => comp.id));
-        const socialLinks = user.contacts.reduce((acc, contact) => {
-          acc[contact.type] = contact.value;
-          return acc;
-        }, {});
-        setSocialLinks(socialLinks);
+        setSocialLinks(user.contacts);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -74,7 +65,7 @@ const Editinfo = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const formattedContacts = Object.entries(socialLinks).map(([type, value]) => {
+    const formattedContacts = socialLinks.map(({ type, value }) => {
       return { type, value: value.trim() || null };
     });
 
@@ -104,8 +95,20 @@ const Editinfo = () => {
     }
   };
 
-  const handleSocialLinkChange = (type, value) => {
-    setSocialLinks(prevLinks => ({ ...prevLinks, [type]: value }));
+  const handleSocialLinkChange = (index, value) => {
+    setSocialLinks(prevLinks => {
+      const newLinks = [...prevLinks];
+      newLinks[index].value = value;
+      return newLinks;
+    });
+  };
+
+  const addNewSocialLink = () => {
+    if (newSocialLinkType && newSocialLinkValue) {
+      setSocialLinks([...socialLinks, { type: newSocialLinkType, value: newSocialLinkValue }]);
+      setNewSocialLinkType('');
+      setNewSocialLinkValue('');
+    }
   };
 
   const handleCompetenceChange = (event) => {
@@ -156,15 +159,46 @@ const Editinfo = () => {
           </select>
         </div>
         {/* inputs pour les réseaux sociaux */}
-        {Object.keys(socialLinks).map(key => (
+        {socialLinks.map((contact, index) => (
           <CustomInput
-            key={key}
-            state={socialLinks[key]}
-            label={`Votre ${key.charAt(0).toUpperCase() + key.slice(1)}`}
+            key={index}
+            state={contact.value}
+            label={`Votre ${contact.type.charAt(0).toUpperCase() + contact.type.slice(1)}`}
             type="text"
-            callable={(event) => handleSocialLinkChange(key, event.target.value)}
+            callable={(event) => handleSocialLinkChange(index, event.target.value)}
           />
         ))}
+        {/* Ajouter un nouveau contact */}
+        <div className='mb-4'>
+          <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='newContactType'>
+            Ajouter un nouveau contact
+          </label>
+          <div className='flex'>
+            <input
+              type='text'
+              id='newContactType'
+              value={newSocialLinkType}
+              onChange={(event) => setNewSocialLinkType(event.target.value)}
+              placeholder='Type (e.g., linkedin, github)'
+              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+            />
+            <input
+              type='text'
+              id='newContactValue'
+              value={newSocialLinkValue}
+              onChange={(event) => setNewSocialLinkValue(event.target.value)}
+              placeholder='Lien'
+              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+            />
+            <button
+              type='button'
+              onClick={addNewSocialLink}
+              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2'
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
         <div className='flex items-center justify-center pt-5'>
           {isLoading ? <ButtonLoader /> :
             <button type='submit' className='bg-orange hover:bg-orange_top text-white font-bold py-2 px-4 rounded'>
