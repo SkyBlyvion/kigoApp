@@ -7,7 +7,7 @@ import axios from 'axios';
 import { apiUrl } from '../../../constants/apiConstant';
 
 const Editinfo = () => {
-  const { userId, signOut, signIn } = useAuthContext();
+  const { userId, signIn } = useAuthContext();
   const navigate = useNavigate();
   const [filiere, setFiliere] = useState('');
   const [competences, setCompetences] = useState('');
@@ -19,17 +19,9 @@ const Editinfo = () => {
     soundcloud: '',
     teams: ''
   });
+  const [filieres, setFilieres] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
-  const filieres = [
-    'Informatique',
-    'Marketing',
-    'Design',
-    'Gestion de projet',
-    'Ressources humaines'
-    // Ajoutez d'autres filières ici
-  ];
 
   useEffect(() => {
     // Fetch user data to pre-fill form fields
@@ -48,56 +40,52 @@ const Editinfo = () => {
         console.error('Error fetching user data:', error);
       }
     };
+
+    // Fetch available filieres
+    const fetchFilieres = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/filieres`);
+        console.log('Filieres response:', response.data);
+        setFilieres(response.data['hydra:member']);
+      } catch (error) {
+        console.error('Error fetching filieres:', error);
+        setFilieres([]); // Assurez-vous que filieres est un tableau
+      }
+    };
+
     fetchUserData();
+    fetchFilieres();
   }, [userId]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const formattedContacts = Object.entries(socialLinks).map(([type, value]) => {
+      return { type, value: value.trim() || null };
+    });
+
+    // on crée un objet pour le patch
+    const data = {
+      filiere: filiere ? `/api/filieres/${filiere}` : null,
+      competences: competences.split(',').map(comp => comp.trim()).filter(comp => comp),
+      contacts: formattedContacts.filter(contact => contact.value)
+    };
+
+    console.log('Data to be sent:', data);
+
+    setIsLoading(true);
+
     try {
-      // on vérifie que l'user en session est bien le même que celui en bdd
-      const userInfo = JSON.parse(localStorage.getItem('USER_INFOS'));
-      if (userInfo.id !== userId) {
-        // on déconnecte si l'utilisateur en session n'est pas le même que celui en BDD
-        signOut();
-        // on redirige vers la page de connexion
-        navigate('/login');
-        return;
-      }
-
-      // on crée un objet pour le patch
-      const data = {
-        filiere,
-        competences: competences.split(',').map(comp => comp.trim()),
-        contacts: Object.entries(socialLinks).map(([type, value]) => ({ type, value }))
-      };
-
-      setIsLoading(true);
-
-      try {
-        axios.defaults.headers.patch['Content-Type'] = 'application/merge-patch+json';
-        // méthode qui modifie les infos de l'user
-        const resp = await axios.patch(`${apiUrl}/users/${userId}`, data);
-        // on reconstruit l'objet user pour mettre à jour les valeurs du contexte auth
-        const user = {
-          userId: resp.data.id,
-          email: resp.data.email,
-          lastname: resp.data.lastname,
-          firstname: resp.data.firstname
-        };
-        // mise à jour du contexte d'authentification
-        signIn(user);
-        // on redirige vers la page de compte
-        navigate(`/account/${userId}`);
-      } catch (error) {
-        console.error(`Erreur sur la requête de modification des infos : ${error}`);
-        setError('Erreur lors de la mise à jour des informations');
-      } finally {
-        setIsLoading(false);
-      }
-
+      axios.defaults.headers.patch['Content-Type'] = 'application/merge-patch+json';
+      // méthode qui modifie les infos de l'user
+      await axios.patch(`${apiUrl}/users/${userId}`, data);
+      // On redirige vers la page de compte
+      navigate(`/account/${userId}`);
     } catch (error) {
-      console.error('Erreur lors de la soumission du formulaire :', error);
-      setError('Erreur lors de la soumission du formulaire');
+      console.error(`Erreur sur la requête de modification des infos : ${error}`);
+      console.error('Erreur details:', error.response.data);
+      setError('Erreur lors de la mise à jour des informations');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -123,8 +111,8 @@ const Editinfo = () => {
             className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
           >
             <option value='' disabled>Choisissez votre filière</option>
-            {filieres.map((filiere, index) => (
-              <option key={index} value={filiere}>{filiere}</option>
+            {Array.isArray(filieres) && filieres.map((filiere) => (
+              <option key={filiere.id} value={filiere.id}>{filiere.label}</option>
             ))}
           </select>
         </div>
