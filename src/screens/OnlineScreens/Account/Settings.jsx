@@ -10,7 +10,7 @@ const Editinfo = () => {
   const { userId, signIn } = useAuthContext();
   const navigate = useNavigate();
   const [filiere, setFiliere] = useState('');
-  const [competences, setCompetences] = useState('');
+  const [competences, setCompetences] = useState([]);
   const [socialLinks, setSocialLinks] = useState({
     linkedin: '',
     github: '',
@@ -20,6 +20,7 @@ const Editinfo = () => {
     teams: ''
   });
   const [filieres, setFilieres] = useState([]);
+  const [allCompetences, setAllCompetences] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -30,7 +31,7 @@ const Editinfo = () => {
         const response = await axios.get(`${apiUrl}/users/${userId}`);
         const user = response.data;
         setFiliere(user.filiere);
-        setCompetences(user.competences.join(', '));
+        setCompetences(user.competences.map(comp => comp.id));
         const socialLinks = user.contacts.reduce((acc, contact) => {
           acc[contact.type] = contact.value;
           return acc;
@@ -53,8 +54,21 @@ const Editinfo = () => {
       }
     };
 
+    // Fetch available competences
+    const fetchCompetences = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/competences`);
+        console.log('Competences response:', response.data);
+        setAllCompetences(response.data['hydra:member']);
+      } catch (error) {
+        console.error('Error fetching competences:', error);
+        setAllCompetences([]); // Assurez-vous que competences est un tableau
+      }
+    };
+
     fetchUserData();
     fetchFilieres();
+    fetchCompetences();
   }, [userId]);
 
   const handleSubmit = async (event) => {
@@ -67,7 +81,7 @@ const Editinfo = () => {
     // on crée un objet pour le patch
     const data = {
       filiere: filiere ? `/api/filieres/${filiere}` : null,
-      competences: competences.split(',').map(comp => comp.trim()).filter(comp => comp),
+      competences: competences.map(comp => `/api/competences/${comp}`),
       contacts: formattedContacts.filter(contact => contact.value)
     };
 
@@ -94,6 +108,14 @@ const Editinfo = () => {
     setSocialLinks(prevLinks => ({ ...prevLinks, [type]: value }));
   };
 
+  const handleCompetenceChange = (event) => {
+    const value = Array.from(
+      event.target.selectedOptions,
+      (option) => option.value
+    );
+    setCompetences(value);
+  };
+
   return (
     <div className='flex flex-1 flex-col h-screen justify-start items-center bg-white'>
       <h2 className='text-black font-bold text-xl py-5'>Mettre à jour votre compte</h2>
@@ -116,8 +138,23 @@ const Editinfo = () => {
             ))}
           </select>
         </div>
-        {/* input pour competences */}
-        <CustomInput state={competences} label="Vos Compétences (séparées par des virgules)" type="text" callable={(event) => setCompetences(event.target.value)} />
+        {/* Select pour competences */}
+        <div className='mb-4'>
+          <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='competences'>
+            Vos Compétences
+          </label>
+          <select
+            id='competences'
+            multiple
+            value={competences}
+            onChange={handleCompetenceChange}
+            className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+          >
+            {Array.isArray(allCompetences) && allCompetences.map((competence) => (
+              <option key={competence.id} value={competence.id}>{competence.label}</option>
+            ))}
+          </select>
+        </div>
         {/* inputs pour les réseaux sociaux */}
         {Object.keys(socialLinks).map(key => (
           <CustomInput
