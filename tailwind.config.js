@@ -24,6 +24,7 @@ export default {
         green_08: 'rgba(30, 125, 96, 0.8)',
         green_06: 'rgba(30, 125, 96, 0.6)',
         green_top: 'rgba(26, 173, 78, 1)',
+        green_dot: '#28a745',
       },
       animation: {
         slideup: 'slideup 1s ease-in-out',

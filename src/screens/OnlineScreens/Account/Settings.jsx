@@ -12,10 +12,11 @@ const Editinfo = () => {
   const [filiere, setFiliere] = useState('');
   const [competences, setCompetences] = useState([]);
   const [socialLinks, setSocialLinks] = useState([]);
-  const [newSocialLinkType, setNewSocialLinkType] = useState('');
-  const [newSocialLinkValue, setNewSocialLinkValue] = useState('');
+  const [newSocialLinks, setNewSocialLinks] = useState([{ type: '', value: '' }]);
+  const [deletedSocialLinks, setDeletedSocialLinks] = useState([]); // Pour garder une trace des contacts supprimés
   const [filieres, setFilieres] = useState([]);
   const [allCompetences, setAllCompetences] = useState([]);
+  const [contactTypes, setContactTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -25,7 +26,7 @@ const Editinfo = () => {
       try {
         const response = await axios.get(`${apiUrl}/users/${userId}`);
         const user = response.data;
-        setFiliere(user.filiere);
+        setFiliere(user.filiere?.id || '');
         setCompetences(user.competences.map(comp => comp.id));
         setSocialLinks(user.contacts);
       } catch (error) {
@@ -57,23 +58,59 @@ const Editinfo = () => {
       }
     };
 
+    // Fetch available contact types
+    const fetchContactTypes = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/types`);
+        console.log('Contact types response:', response.data);
+        setContactTypes(response.data['hydra:member']);
+      } catch (error) {
+        console.error('Error fetching contact types:', error);
+        setContactTypes([]); // Assurez-vous que contactTypes est un tableau
+      }
+    };
+
     fetchUserData();
     fetchFilieres();
     fetchCompetences();
+    fetchContactTypes();
   }, [userId]);
 
+  //TODO: regler le bug des contacts supprimés ( bdd user_id deleted mais record présent)
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const formattedContacts = socialLinks.map(({ type, value }) => {
-      return { type, value: value.trim() || null };
+    // Préparer les contacts existants avec les nouvelles valeurs, en vérifiant si les valeurs ont changé
+    const existingContacts = socialLinks
+      .filter(({ id, type, value }) => value.trim()) // Filtrer les contacts avec des valeurs vides
+      .map(({ id, type, value }) => ({
+        id,
+        type: `/api/types/${type.id}`,
+        value: value.trim()
+      }));
+
+    // Préparer les nouveaux contacts
+    const newContacts = newSocialLinks
+      .filter(({ type, value }) => value.trim()) // Filtrer les contacts avec des valeurs vides
+      .map(({ type, value }) => ({
+        type: `/api/types/${type}`,
+        value: value.trim()
+      }));
+
+    // Vérifiez si un contact existant a été modifié
+    const modifiedContacts = existingContacts.filter(contact => {
+      const originalContact = socialLinks.find(link => link.id === contact.id);
+      return originalContact && originalContact.value !== contact.value;
     });
 
-    // on crée un objet pour le patch
+    // Combine modified contacts and new contacts
+    const combinedContacts = [...modifiedContacts, ...newContacts];
+
     const data = {
       filiere: filiere ? `/api/filieres/${filiere}` : null,
       competences: competences.map(comp => `/api/competences/${comp}`),
-      contacts: formattedContacts.filter(contact => contact.value)
+      contacts: combinedContacts,
+      deletedContacts: deletedSocialLinks // inclure les contacts supprimés
     };
 
     console.log('Data to be sent:', data);
@@ -82,14 +119,15 @@ const Editinfo = () => {
 
     try {
       axios.defaults.headers.patch['Content-Type'] = 'application/merge-patch+json';
-      // méthode qui modifie les infos de l'user
       await axios.patch(`${apiUrl}/users/${userId}`, data);
-      // On redirige vers la page de compte
       navigate(`/account/${userId}`);
     } catch (error) {
       console.error(`Erreur sur la requête de modification des infos : ${error}`);
-      console.error('Erreur details:', error.response.data);
-      setError('Erreur lors de la mise à jour des informations');
+      if (error.response && error.response.data && error.response.data.violations) {
+        setError('Erreur lors de la mise à jour des informations');
+      } else {
+        setError('Erreur réseau ou serveur');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -103,12 +141,22 @@ const Editinfo = () => {
     });
   };
 
+  const handleNewSocialLinkChange = (index, field, value) => {
+    const newLinks = [...newSocialLinks];
+    newLinks[index][field] = value;
+    setNewSocialLinks(newLinks);
+  };
+
   const addNewSocialLink = () => {
-    if (newSocialLinkType && newSocialLinkValue) {
-      setSocialLinks([...socialLinks, { type: newSocialLinkType, value: newSocialLinkValue }]);
-      setNewSocialLinkType('');
-      setNewSocialLinkValue('');
-    }
+    setNewSocialLinks([...newSocialLinks, { type: '', value: '' }]);
+  };
+
+  const removeSocialLink = (index) => {
+    setSocialLinks(prevLinks => {
+      const linkToRemove = prevLinks[index];
+      setDeletedSocialLinks([...deletedSocialLinks, linkToRemove.id]);
+      return prevLinks.filter((_, i) => i !== index);
+    });
   };
 
   const handleCompetenceChange = (event) => {
@@ -160,45 +208,45 @@ const Editinfo = () => {
         </div>
         {/* inputs pour les réseaux sociaux */}
         {socialLinks.map((contact, index) => (
-          <CustomInput
-            key={index}
-            state={contact.value}
-            label={`Votre ${contact.type.charAt(0).toUpperCase() + contact.type.slice(1)}`}
-            type="text"
-            callable={(event) => handleSocialLinkChange(index, event.target.value)}
-          />
-        ))}
-        {/* Ajouter un nouveau contact */}
-        <div className='mb-4'>
-          <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='newContactType'>
-            Ajouter un nouveau contact
-          </label>
-          <div className='flex'>
-            <input
-              type='text'
-              id='newContactType'
-              value={newSocialLinkType}
-              onChange={(event) => setNewSocialLinkType(event.target.value)}
-              placeholder='Type (e.g., linkedin, github)'
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+          <div key={index} className='mb-4 flex'>
+            <CustomInput
+              state={contact.value}
+              label={`Votre ${contact.type.label.charAt(0).toUpperCase() + contact.type.label.slice(1)}`}
+              type="text"
+              callable={(event) => handleSocialLinkChange(index, event.target.value)}
             />
+            <button type="button" onClick={() => removeSocialLink(index)} className='ml-2 bg-red-500 text-white p-2 rounded'>Supprimer</button>
+          </div>
+        ))}
+        {/* Ajouter des nouveaux contacts */}
+        {newSocialLinks.map((link, index) => (
+          <div key={index} className='mb-4 flex'>
+            <select
+              value={link.type}
+              onChange={(event) => handleNewSocialLinkChange(index, 'type', event.target.value)}
+              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+            >
+              <option value='' disabled>Choisissez un type de contact</option>
+              {Array.isArray(contactTypes) && contactTypes.map((type) => (
+                <option key={type.id} value={type.id}>{type.label}</option>
+              ))}
+            </select>
             <input
               type='text'
-              id='newContactValue'
-              value={newSocialLinkValue}
-              onChange={(event) => setNewSocialLinkValue(event.target.value)}
+              value={link.value}
+              onChange={(event) => handleNewSocialLinkChange(index, 'value', event.target.value)}
               placeholder='Lien'
               className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
             />
-            <button
-              type='button'
-              onClick={addNewSocialLink}
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2'
-            >
-              Ajouter
-            </button>
           </div>
-        </div>
+        ))}
+        <button
+          type='button'
+          onClick={addNewSocialLink}
+          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4'
+        >
+          Ajouter un autre contact
+        </button>
         <div className='flex items-center justify-center pt-5'>
           {isLoading ? <ButtonLoader /> :
             <button type='submit' className='bg-orange hover:bg-orange_top text-white font-bold py-2 px-4 rounded'>

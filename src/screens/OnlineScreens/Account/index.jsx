@@ -11,22 +11,17 @@ import { FaRegHandshake, FaSoundcloud } from 'react-icons/fa';
 import axios from 'axios';
 
 const Account = () => {
-
   // on recupere le hook
   const dispatch = useDispatch();
-
   // on utilise params
   const params = useParams();
-
   // recupere l'id depuis l'url
-  const userId = params.id
-
+  const userId = params.id;
   // on recupere les states
   const { loading, user } = useSelector(selectUserData);
 
   const [isEditing, setIsEditing] = useState(false);
   const [biography, setBiography] = useState('');
-
   // Ajouter les états pour "Rêve"
   const [isEditingReve, setIsEditingReve] = useState(false);
   const [reve, setReve] = useState('');
@@ -58,7 +53,7 @@ const Account = () => {
         { biographie: biography },
         {
           headers: {
-            'Content-Type': 'application/merge-patch+json' // ou 'application/merge-patch+json'
+            'Content-Type': 'application/merge-patch+json',
           }
         }
       );
@@ -84,7 +79,7 @@ const Account = () => {
         { reve: reve },
         {
           headers: {
-            'Content-Type': 'application/merge-patch+json'
+            'Content-Type': 'application/merge-patch+json',
           }
         }
       );
@@ -98,16 +93,11 @@ const Account = () => {
     ? `${avatarUrl}/${user?.avatar?.imagePath}`
     : `${imageUrl}/user.png`;
 
-  //TODO: EDIT social links on profile
   // Sample social links data structure
-  const socialLinks = {
-    teams: user?.contacts?.find(contact => contact.type === 'teams')?.value,
-    linkedin: user?.contacts?.find(contact => contact.type === 'linkedin')?.value,
-    instagram: user?.contacts?.find(contact => contact.type === 'instagram')?.value,
-    behance: user?.contacts?.find(contact => contact.type === 'behance')?.value,
-    github: user?.contacts?.find(contact => contact.type === 'github')?.value,
-    soundcloud: user?.contacts?.find(contact => contact.type === 'soundcloud')?.value,
-  };
+  const socialLinks = user?.contacts?.map(contact => ({
+    type: contact.type.label,
+    value: contact.value,
+  })) ?? [];
 
   // Icons mapping for social links
   const socialIcons = {
@@ -129,39 +119,38 @@ const Account = () => {
         <div className='flex flex-col items-center bg-orange w-full pb-4 '>
 
           {/* icon reglages et edit */}
-          {/* TODO:EDIT Account & Settings */}
           <div className="p-4 w-full flex justify-between items-center">
             <Link to="/settings">
               <img src="../../../../documentation/svg/setting.svg" alt="setting" className="text-2xl" />
             </Link>
-            <Link to="/edit-info" >
+            <Link to="/edit-info">
               <img src="../../../../documentation/svg/edit.svg" alt="edit" className="text-2xl" />
             </Link>
           </div>
 
           {/* image avatar */}
           {/* TODO:EDIT Avatar ( list avatar) */}
-          <div className="relative w-36 h-36 flex flex-col items-center translate-y-[40%]  ">
-            <img src={imgPath} alt="avatar user" className=' object-contain rounded-full' />
+          <div className="relative w-36 h-36 flex flex-col items-center translate-y-[40%]">
+            <img src={imgPath} alt="avatar user" className='object-contain rounded-full' />
           </div>
 
         </div>
 
         {/* Nom prenom */}
-        <div className='pt-[10%] '>
-          <h1 className="text-2xl text-orange font-bold ">{user?.lastname ?? 'Pas de lastname'} {user?.firstname ?? 'Pas de firstname'} </h1>
+        <div className='pt-[10%]'>
+          <h1 className="text-2xl text-orange font-bold">
+            {user?.lastname ?? 'Pas de lastname'} {user?.firstname ?? 'Pas de firstname'}
+          </h1>
         </div>
 
-        {/* disponible CCV2 */}
-        <div className="flex space-x-2 my-2">
+        {/* disponible */}
+        <div className="flex space-x-2 my-2 items-center">
           <span className="bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-sm">
-            profession: {user?.profession}
+            profession: {user?.filiere?.label ?? 'Aucune filière'}
           </span>
-          <span className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-sm">
+          <span className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-sm flex items-center">
+            <img src="../../../../documentation/logos/icons8-green-dot-48.png" alt="green dot" className="h-4 w-4 mr-1" />
             Disponible
-          </span>
-          <span className="border border-gray-300 text-gray-800 px-2 py-1 rounded-full text-sm flex items-center">
-            <FaRegHandshake className="mr-1" /> CCV 2
           </span>
         </div>
 
@@ -187,7 +176,6 @@ const Account = () => {
           </div>
         </div>
 
-        {/* TODO:second bio, likely a hint about the user */}
         <div className='flex justify-center items-center'>
           {isEditingReve ? (
             <textarea
@@ -211,10 +199,10 @@ const Account = () => {
           <div>
             <p className="text-lg text-orange font-sans py-1">Réseaux :</p>
             <div className="flex flex-row space-x-4 items-center">
-              {Object.keys(socialLinks).map(key => (
-                socialLinks[key] && (
-                  <a key={key} href={socialLinks[key]} className="icon-large text-orange rounded-xl">
-                    {socialIcons[key]}
+              {socialLinks.map(link => (
+                link.value && (
+                  <a key={link.type} href={link.value} className="icon-large text-orange rounded-xl">
+                    {socialIcons[link.type.toLowerCase()] ?? <FiUser />}
                   </a>
                 )
               ))}
@@ -233,7 +221,7 @@ const Account = () => {
 
       </div>
     </>
-  )
+  );
 }
 
 export default Account;
