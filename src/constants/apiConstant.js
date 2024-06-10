@@ -1,5 +1,5 @@
 // on déclare l'url de base
-export const apiRoot = "http://api_kigo.lndo.site:8000";
+export const apiRoot = "http://api_kigo.lndo.site:8080";
 // export const apiRoot = "http://api_kigo.lndo.site";
 
 
