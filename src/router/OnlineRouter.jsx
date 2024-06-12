@@ -4,9 +4,10 @@ import ErrorPage from "../screens/ErrorScreens/ErrorPage";
 import Home from "../screens/OnlineScreens/Dashboard/Home";
 import Account from "../screens/OnlineScreens/Account";
 import ProjectsList from "../screens/OnlineScreens/ProjectsList";
-import PostList from "../screens/OnlineScreens/PostList";
+import PostList from "../screens/OnlineScreens/Posts/PostList";
 import Editinfo from "../screens/OnlineScreens/Account/Editinfo";
 import Settings from "../screens/OnlineScreens/Account/Settings";
+import CreatePost from "../screens/OnlineScreens/Posts/CreatePost";
 
 const OnlineRouter = createBrowserRouter([
     {
@@ -41,6 +42,10 @@ const OnlineRouter = createBrowserRouter([
             {
                 path: "/settings",
                 element: <Settings />
+            },
+            {
+                path: "/CreatePost",
+                element: <CreatePost />
             }
             
         ]
