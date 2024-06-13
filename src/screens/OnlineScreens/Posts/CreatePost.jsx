@@ -12,6 +12,7 @@ const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const [media, setMedia] = useState(null);
+  const [type, setType] = useState('1'); // Default to "project"
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -24,22 +25,21 @@ const CreatePost = () => {
     setIsLoading(true);
 
     const formData = new FormData();
-    formData.append('user', `/api/users/${userId}`);
     formData.append('title', title);
     formData.append('text', text);
+    formData.append('type', type);
+    formData.append('user', `/api/users/${userId}`);
     if (media) {
-      formData.append('media', media);
+      formData.append('imageFile', media);
     }
 
     try {
       await axios.post(`${apiUrl}/posts`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-
-
         },
       });
-      navigate('/post');
+      navigate('/posts');
     } catch (error) {
       console.error('Error creating post:', error);
       setError('Erreur lors de la création du post');
@@ -52,17 +52,32 @@ const CreatePost = () => {
     <div className='flex flex-1 flex-col h-screen justify-start items-center bg-white'>
       <h2 className='text-black font-bold text-xl py-5'>Créer un post</h2>
       <div className='text-red-600 font-bold mb-4'>{error}</div>
-      <form onSubmit={handleSubmit} className='max-w-md mx-auto'>
+      <form onSubmit={handleSubmit} className='max-w-md mx-auto' encType="multipart/form-data">
         <CustomInput state={title} label="Titre" type="text" callable={(event) => setTitle(event.target.value)} />
         <CustomInput state={text} label="Texte" type="text" callable={(event) => setText(event.target.value)} />
-        <div className='mb-4'>
+        <div className="mb-4">
+          <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='type'>
+            Type de post
+          </label>
+          <select
+            id='type'
+            value={type}
+            onChange={(event) => setType(event.target.value)}
+            className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+          >
+            <option value="1">Project</option>
+            <option value="2">Participation</option>
+            <option value="3">Inspiration</option>
+            <option value="4">Personal Realization</option>
+          </select>
+        </div>
+        <div className="mb-4">
           <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='media'>
             Media
           </label>
           <input
             id='media'
-            type='file'
-            accept='image/*'
+            type="file"
             onChange={handleMediaChange}
             className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
           />
