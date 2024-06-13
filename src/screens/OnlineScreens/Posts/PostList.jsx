@@ -39,7 +39,7 @@ const Posts = () => {
   if (loading) return <PageLoader />;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center h-screen overflow-y-auto p-4 pb-20">
       {/* icon reglages et edit */}
       <div className="p-4 w-full flex justify-between items-center">
         <Link to="/CreatePost">

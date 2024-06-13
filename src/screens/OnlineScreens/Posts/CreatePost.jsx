@@ -32,7 +32,7 @@ const CreatePost = () => {
       formData.append('label', title);
 
       try {
-        const mediaResponse = await axios.post(`${apiUrl}/media`, formData, {
+        const mediaResponse = await axios.post(`${apiUrl}/medias`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

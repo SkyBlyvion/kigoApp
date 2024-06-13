@@ -3,7 +3,7 @@ import App from "../App";
 import ErrorPage from "../screens/ErrorScreens/ErrorPage";
 import Home from "../screens/OnlineScreens/Dashboard/Home";
 import Account from "../screens/OnlineScreens/Account";
-import ProjectsList from "../screens/OnlineScreens/ProjectsList";
+import ProjectList from "../screens/OnlineScreens/Projects/ProjectList";
 import PostList from "../screens/OnlineScreens/Posts/PostList";
 import Editinfo from "../screens/OnlineScreens/Account/Editinfo";
 import Settings from "../screens/OnlineScreens/Account/Settings";
@@ -29,7 +29,7 @@ const OnlineRouter = createBrowserRouter([
             },
             {
                 path: "/project",
-                element: <ProjectsList />
+                element: <ProjectList />
             },
             {
                 path: "/post",
