@@ -24,22 +24,47 @@ const CreatePost = () => {
     event.preventDefault();
     setIsLoading(true);
 
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('text', text);
-    formData.append('type', type);
-    formData.append('user', `/api/users/${userId}`);
+    let mediaUrl = null;
+
     if (media) {
-      formData.append('imageFile', media);
+      const formData = new FormData();
+      formData.append('file', media);
+      formData.append('label', title);
+
+      try {
+        const mediaResponse = await axios.post(`${apiUrl}/media`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        mediaUrl = mediaResponse.data['@id'];
+      } catch (error) {
+        console.error('Error creating media:', error);
+        setError('Erreur lors de la création du média');
+        setIsLoading(false);
+        return;
+      }
     }
 
+    const currentDate = new Date().toISOString();
+
+    const postData = {
+      title,
+      text,
+      type: parseInt(type, 10),
+      user: `/api/users/${userId}`,
+      media: mediaUrl,
+      created_date: currentDate.split('T')[0], // Only the date part
+      updated_date: currentDate,
+    };
+
     try {
-      await axios.post(`${apiUrl}/posts`, formData, {
+      await axios.post(`${apiUrl}/posts`, postData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/ld+json',
         },
       });
-      navigate('/posts');
+      navigate('/post');
     } catch (error) {
       console.error('Error creating post:', error);
       setError('Erreur lors de la création du post');
@@ -82,6 +107,8 @@ const CreatePost = () => {
             className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
           />
         </div>
+        <input type="hidden" name="created_date" value={new Date().toISOString().split('T')[0]} />
+        <input type="hidden" name="updated_date" value={new Date().toISOString()} />
         <div className='flex items-center justify-center pt-5'>
           {isLoading ? <ButtonLoader /> :
             <button type='submit' className='bg-orange hover:bg-orange_top text-white font-bold py-2 px-4 rounded'>

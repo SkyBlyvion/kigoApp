@@ -43,11 +43,9 @@ const Posts = () => {
       {/* icon reglages et edit */}
       <div className="p-4 w-full flex justify-between items-center">
         <Link to="/CreatePost">
-          <img src="../../../../documentation/svg/setting.svg" alt="setting" className="text-2xl" />
+          <img src="../../../../documentation/svg/edit.svg" alt="setting" className="text-2xl" />
         </Link>
-        <Link to="/edit-info">
-          <img src="../../../../documentation/svg/edit.svg" alt="edit" className="text-2xl" />
-        </Link>
+        
       </div>
       <h1 className="text-2xl text-orange font-bold">Posts</h1>
       <div className="w-5/6">
@@ -61,7 +59,10 @@ const Posts = () => {
             {post.mediaDetails && (
               <div>
                 <p>{post.mediaDetails.label}</p>
-                <img src={`http://api_kigo.lndo.site/images/postImages/${post.mediaDetails.url_img}`} alt={post.mediaDetails.label} className="mt-4" />
+                <img src={`http://api_kigo.lndo.site/images/postImages/${post.mediaDetails.url_img}`} 
+                  alt={post.mediaDetails.label} 
+                  className="mt-4 max-w-full max-h-[200px] object-cover" 
+                />
               </div>
             )}
           </div>
