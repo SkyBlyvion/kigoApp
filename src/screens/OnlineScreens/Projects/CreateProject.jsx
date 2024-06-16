@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuthContext } from '../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -14,32 +14,9 @@ const CreateProject = () => {
   const [text, setText] = useState('');
   const [postId, setPostId] = useState(null);
   const [type, setType] = useState('1'); // Default to "project"
-  const [competences, setCompetences] = useState([]);
-  const [filieres, setFilieres] = useState([]);
-  const [selectedCompetences, setSelectedCompetences] = useState([]);
-  const [selectedFilieres, setSelectedFilieres] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(true);
-
-  useEffect(() => {
-    // Fetch competences and filieres
-    const fetchCompetencesAndFilieres = async () => {
-      try {
-        const [competencesResponse, filieresResponse] = await Promise.all([
-          axios.get(`${apiUrl}/competences`),
-          axios.get(`${apiUrl}/filieres`)
-        ]);
-
-        setCompetences(competencesResponse.data['hydra:member']);
-        setFilieres(filieresResponse.data['hydra:member']);
-      } catch (error) {
-        console.error('Error fetching competences or filieres:', error);
-      }
-    };
-
-    fetchCompetencesAndFilieres();
-  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -47,8 +24,6 @@ const CreateProject = () => {
 
     const projectData = {
       post: `/api/posts/${postId}`,
-      competences: selectedCompetences.map(id => `/api/competences/${id}`),
-      filieres: selectedFilieres.map(id => `/api/filieres/${id}`),
       users: [`/api/users/${userId}`],
       isActive: true,
       isFinish: false,
@@ -61,35 +36,13 @@ const CreateProject = () => {
         },
       });
 
-      navigate('/projects');
+      navigate('/project');
     } catch (error) {
       console.error('Error creating project:', error);
       setError('Erreur lors de la création du projet');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleCompetenceChange = (event) => {
-    const { options } = event.target;
-    const selected = [];
-    for (const option of options) {
-      if (option.selected) {
-        selected.push(option.value);
-      }
-    }
-    setSelectedCompetences(selected);
-  };
-
-  const handleFiliereChange = (event) => {
-    const { options } = event.target;
-    const selected = [];
-    for (const option of options) {
-      if (option.selected) {
-        selected.push(option.value);
-      }
-    }
-    setSelectedFilieres(selected);
   };
 
   const handlePostSelect = (post) => {
@@ -100,7 +53,7 @@ const CreateProject = () => {
     setIsModalOpen(false); // Close the modal after selecting a post
   };
 
-  console.log({ title, text, type, postId, selectedCompetences, selectedFilieres });
+  console.log({ title, text, type, postId });
   return (
     <div className='flex flex-1 flex-col h-screen justify-start items-center bg-white'>
       <h2 className='text-black font-bold text-xl py-5'>Créer un projet</h2>
@@ -129,36 +82,6 @@ const CreateProject = () => {
               <option value="2">Participation</option>
               <option value="3">Inspiration</option>
               <option value="4">Personal Realization</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='competences'>
-              Compétences
-            </label>
-            <select
-              id='competences'
-              multiple
-              onChange={handleCompetenceChange}
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-            >
-              {competences.map(comp => (
-                <option key={comp.id} value={comp.id}>{comp.label}</option>
-              ))}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='filieres'>
-              Filières
-            </label>
-            <select
-              id='filieres'
-              multiple
-              onChange={handleFiliereChange}
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-            >
-              {filieres.map(fil => (
-                <option key={fil.id} value={fil.id}>{fil.label}</option>
-              ))}
             </select>
           </div>
           <input type="hidden" name="created_date" value={new Date().toISOString().split('T')[0]} />

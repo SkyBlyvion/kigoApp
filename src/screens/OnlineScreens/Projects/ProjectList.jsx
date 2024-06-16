@@ -77,9 +77,13 @@ const ProjectsList = () => {
   return (
     <div className="flex flex-col items-center h-screen overflow-y-auto p-4 pb-20">
         <div className="p-4 w-full flex justify-between items-center">
-          <Link to="/CreateProject"> {/*TODO:CreateProject*/}
+          <Link to="/CreateProject"> {/*TODO:HoverCaption"Créer un projet"*/}
+            <img src="../../../../documentation/svg/plus.svg" alt="setting" className="text-2xl" />
+          </Link>
+          <Link to="/EditProject"> {/*TODO:HoverCaption"Modifier"*/}
             <img src="../../../../documentation/svg/edit.svg" alt="setting" className="text-2xl" />
           </Link>
+
         
         </div>
       {/* <img src="../../../../documentation/svg/Filter.svg" alt="filter" /> */}

@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { USER_INFOS } from '../../../constants/appConstant'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectUserData } from '../../../redux/user/userSelector'
-import { fetchUser } from '../../../redux/user/userSlice'
-import PageLoader from '../../../components/loader/PageLoader'
-import { MdOutlineAddCircle } from 'react-icons/md'
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { USER_INFOS } from '../../../constants/appConstant';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserData } from '../../../redux/user/userSelector';
+import { fetchUser } from '../../../redux/user/userSlice';
+import PageLoader from '../../../components/loader/PageLoader';
+import { MdOutlineAddCircle } from 'react-icons/md';
 
 const Home = () => {
-
   const dispatch = useDispatch();
   const id = JSON.parse(localStorage.getItem(USER_INFOS)).userId;
 
@@ -19,44 +18,46 @@ const Home = () => {
 
   // on recupere les states
   const { loading, user } = useSelector(selectUserData);
-  
-  // console.log('zzz', user)
 
-  
   if (loading) return <PageLoader />
-  
+
   return (
-    <>
-      <div className='flex flex-col items-center container mb-20'>
+    <div className="flex flex-col items-center container mx-auto p-4 font-aeonik">
+      <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
+      <p className="text-xl text-orange mb-6">Bonjour {user?.lastname} {user?.firstname}</p>
 
-        <div className='text-3xl'>Dashboard</div><br/>
-        <p className='text-orange'>Bonjour {user?.lastname} {user?.firstname} </p>
-        <br/>
-        <p className='text-center px-4'>Dans ce dashboard, recommandations de projets en fonction de la compatibilité avec leurs compétences</p><br/>
-        <p className='text-center px-4'>Les demandes de participation à un projet ne seront visibles que par le porteur, et apparaîtront sur la page du projet, 
-          et sur le tableau de bord du porteur. Ce dernier pourra accepter ou refuser les candidatures.</p>
-        <br/>
-        <p>Les projets recommandées </p><br/>
-        
-        <Link to='/project' className='bg-orange text-white font-bold py-2 px-4 rounded'>Liste des projets </Link><br/><br/>
-        <Link to='/projectlist' className='bg-orange text-white font-bold py-2 px-4 rounded'>Ajout de Projet / Porter</Link><br/><br/>
-        <Link to='/projectsuggestion' className='bg-orange text-white font-bold py-2 px-4 rounded'>Suggestion de projet</Link><br/><br/>
-        <Link to='/postlist' className='bg-green text-white font-bold py-2 px-4 rounded'>Liste des posts BTN</Link><br/><br/>
-        <Link to='/post' className='bg-green text-white font-bold py-2 px-4 rounded'>Ajout de Post BTN</Link><br/><br/>
-        <Link to={`/account/${id}`} className='bg-orange text-white font-bold py-2 px-4 rounded'>Mon profil BTN</Link><br/><br/>
-        <Link to="/project">
-              <MdOutlineAddCircle
-                className="w-14 h-14 "
-                style={{ color: "white" }}
-              />
-            </Link>
-
-      
-        
-        
+      {/* Section Projets */}
+      <div className="w-4/6 mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Projets</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Link to='/project' className='bg-orange text-white font-bold py-2 px-4 rounded text-center'>Liste des projets</Link>
+          <Link to='/createproject' className='bg-orange text-white font-bold py-2 px-4 rounded text-center'>Ajout de Projet / Porter</Link>
+          <Link to='/projectsuggestion' className='bg-orange text-white font-bold py-2 px-4 rounded text-center'>Suggestion de projet</Link>
+        </div>
       </div>
-    </>
-  )
-}
 
-export default Home
+      {/* Section Posts */}
+      <div className="w-4/6 mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Posts</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Link to='/post' className='bg-green text-white font-bold py-2 px-4 rounded text-center'>Liste des posts BTN</Link>
+          <Link to='/createpost' className='bg-green text-white font-bold py-2 px-4 rounded text-center'>Ajout de Post BTN</Link>
+        </div>
+      </div>
+
+      {/* Section Profil */}
+      <div className="w-4/6 mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Profil</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Link to={`/account/${id}`} className='bg-orange text-white font-bold py-2 px-4 rounded text-center'>Mon profil BTN</Link>
+        </div>
+      </div>
+
+      <Link to="/project" className="mt-8">
+        <MdOutlineAddCircle className="w-14 h-14 text-orange" />
+      </Link>
+    </div>
+  );
+};
+
+export default Home;

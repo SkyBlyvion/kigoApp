@@ -33,11 +33,10 @@ export default {
       keyframes: {
         slideup: {
           from: { opacity: 0, transform: 'translateY(25%)' },
-        to: { opacity: 1, transform: 'none' },
+          to: { opacity: 1, transform: 'none' },
         }
       }
     },
   },
   plugins: [],
 }
-
