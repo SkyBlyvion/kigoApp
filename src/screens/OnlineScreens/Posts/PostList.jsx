@@ -47,7 +47,7 @@ const Posts = () => {
         </Link>
         
       </div>
-      <h1 className="text-2xl text-orange font-bold">Posts</h1>
+      <h1 className="text-2xl text-orange font-bold pb-4">Posts</h1>
       <div className="w-5/6">
         {posts.map(post => (
           <div key={post.id} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
