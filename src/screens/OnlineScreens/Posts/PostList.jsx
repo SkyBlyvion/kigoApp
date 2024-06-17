@@ -43,7 +43,7 @@ const Posts = () => {
       {/* icon reglages et edit */}
       <div className="p-4 w-full flex justify-between items-center">
         <Link to="/CreatePost">
-          <img src="../../../../documentation/svg/edit.svg" alt="setting" className="text-2xl" />
+          <img src="../../../../documentation/svg/plus.svg" alt="setting" className="text-2xl" />
         </Link>
         
       </div>
