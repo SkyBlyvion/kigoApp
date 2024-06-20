@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import CustomInput from '../../../components/CustomInput';
-import ButtonLoader from '../../../components/loader/ButtonLoader';
-import { useAuthContext } from '../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuthContext } from '../../../contexts/AuthContext';
+import ButtonLoader from '../../../components/loader/ButtonLoader';
+import FiliereSelect from '../../../components/Account/FiliereSelect';
+import CompetencesSelect from '../../../components/Account/CompetencesSelect';
+import SocialLinkInput from '../../../components/Account/SocialLinkInput';
 import { apiUrl } from '../../../constants/apiConstant';
 
 const Editinfo = () => {
-  const { userId, signIn } = useAuthContext();
+  const { userId } = useAuthContext();
   const navigate = useNavigate();
   const [filiere, setFiliere] = useState('');
   const [competences, setCompetences] = useState([]);
   const [socialLinks, setSocialLinks] = useState([]);
   const [newSocialLinks, setNewSocialLinks] = useState([{ type: '', value: '' }]);
-  const [deletedSocialLinks, setDeletedSocialLinks] = useState([]); // Pour garder une trace des contacts supprimés
+  const [deletedSocialLinks, setDeletedSocialLinks] = useState([]);
   const [filieres, setFilieres] = useState([]);
   const [allCompetences, setAllCompetences] = useState([]);
   const [contactTypes, setContactTypes] = useState([]);
@@ -21,7 +23,6 @@ const Editinfo = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    // Fetch user data to pre-fill form fields
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`${apiUrl}/users/${userId}`);
@@ -34,39 +35,33 @@ const Editinfo = () => {
       }
     };
 
-    // Fetch available filieres
     const fetchFilieres = async () => {
       try {
         const response = await axios.get(`${apiUrl}/filieres`);
-        console.log('Filieres response:', response.data);
         setFilieres(response.data['hydra:member']);
       } catch (error) {
         console.error('Error fetching filieres:', error);
-        setFilieres([]); // Assurez-vous que filieres est un tableau
+        setFilieres([]);
       }
     };
 
-    // Fetch available competences
     const fetchCompetences = async () => {
       try {
         const response = await axios.get(`${apiUrl}/competences`);
-        console.log('Competences response:', response.data);
         setAllCompetences(response.data['hydra:member']);
       } catch (error) {
         console.error('Error fetching competences:', error);
-        setAllCompetences([]); // Assurez-vous que competences est un tableau
+        setAllCompetences([]);
       }
     };
 
-    // Fetch available contact types
     const fetchContactTypes = async () => {
       try {
         const response = await axios.get(`${apiUrl}/types`);
-        console.log('Contact types response:', response.data);
         setContactTypes(response.data['hydra:member']);
       } catch (error) {
         console.error('Error fetching contact types:', error);
-        setContactTypes([]); // Assurez-vous que contactTypes est un tableau
+        setContactTypes([]);
       }
     };
 
@@ -76,44 +71,31 @@ const Editinfo = () => {
     fetchContactTypes();
   }, [userId]);
 
-  //TODO: regler le bug des contacts supprimés ( bdd user_id deleted mais record présent)
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Préparer les contacts existants avec les nouvelles valeurs, en vérifiant si les valeurs ont changé
     const existingContacts = socialLinks
-      .filter(({ id, type, value }) => value.trim()) // Filtrer les contacts avec des valeurs vides
+      .filter(({ id, type, value }) => value.trim() && !deletedSocialLinks.includes(id))
       .map(({ id, type, value }) => ({
         id,
         type: `/api/types/${type.id}`,
         value: value.trim()
       }));
 
-    // Préparer les nouveaux contacts
     const newContacts = newSocialLinks
-      .filter(({ type, value }) => value.trim()) // Filtrer les contacts avec des valeurs vides
+      .filter(({ type, value }) => value.trim())
       .map(({ type, value }) => ({
         type: `/api/types/${type}`,
         value: value.trim()
       }));
 
-    // Vérifiez si un contact existant a été modifié
-    const modifiedContacts = existingContacts.filter(contact => {
-      const originalContact = socialLinks.find(link => link.id === contact.id);
-      return originalContact && originalContact.value !== contact.value;
-    });
-
-    // Combine modified contacts and new contacts
-    const combinedContacts = [...modifiedContacts, ...newContacts];
+    const combinedContacts = [...existingContacts, ...newContacts];
 
     const data = {
       filiere: filiere ? `/api/filieres/${filiere}` : null,
       competences: competences.map(comp => `/api/competences/${comp}`),
       contacts: combinedContacts,
-      deletedContacts: deletedSocialLinks // inclure les contacts supprimés
     };
-
-    console.log('Data to be sent:', data);
 
     setIsLoading(true);
 
@@ -172,53 +154,17 @@ const Editinfo = () => {
       <h2 className='text-black font-bold text-xl py-5'>Mettre à jour votre compte</h2>
       <div className='text-red-600 font-bold mb-4'>{error}</div>
       <form onSubmit={handleSubmit} className='max-w-md mx-auto'>
-        {/* Select pour filiere */}
-        <div className='mb-4'>
-          <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='filiere'>
-            Votre Filière
-          </label>
-          <select
-            id='filiere'
-            value={filiere}
-            onChange={(event) => setFiliere(event.target.value)}
-            className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-          >
-            <option value='' disabled>Choisissez votre filière</option>
-            {Array.isArray(filieres) && filieres.map((filiere) => (
-              <option key={filiere.id} value={filiere.id}>{filiere.label}</option>
-            ))}
-          </select>
-        </div>
-        {/* Select pour competences */}
-        <div className='mb-4'>
-          <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='competences'>
-            Vos Compétences
-          </label>
-          <select
-            id='competences'
-            multiple
-            value={competences}
-            onChange={handleCompetenceChange}
-            className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-          >
-            {Array.isArray(allCompetences) && allCompetences.map((competence) => (
-              <option key={competence.id} value={competence.id}>{competence.label}</option>
-            ))}
-          </select>
-        </div>
-        {/* inputs pour les réseaux sociaux */}
+        <FiliereSelect filiere={filiere} filieres={filieres} setFiliere={setFiliere} />
+        <CompetencesSelect competences={competences} allCompetences={allCompetences} handleCompetenceChange={handleCompetenceChange} />
         {socialLinks.map((contact, index) => (
-          <div key={index} className='mb-4 flex'>
-            <CustomInput
-              state={contact.value}
-              label={`Votre ${contact.type.label.charAt(0).toUpperCase() + contact.type.label.slice(1)}`}
-              type="text"
-              callable={(event) => handleSocialLinkChange(index, event.target.value)}
-            />
-            <button type="button" onClick={() => removeSocialLink(index)} className='ml-2 bg-red-500 text-white p-2 rounded'>Supprimer</button>
-          </div>
+          <SocialLinkInput
+            key={index}
+            contact={contact}
+            index={index}
+            handleSocialLinkChange={handleSocialLinkChange}
+            removeSocialLink={removeSocialLink}
+          />
         ))}
-        {/* Ajouter des nouveaux contacts */}
         {newSocialLinks.map((link, index) => (
           <div key={index} className='mb-4 flex'>
             <select
