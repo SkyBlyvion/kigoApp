@@ -40,8 +40,24 @@ const Home = () => {
       <div className="w-4/6 mb-8">
         <h2 className="text-2xl font-semibold mb-4">Posts</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Link to='/post' className='bg-green text-white font-bold py-2 px-4 rounded text-center'>Liste des posts BTN</Link>
-          <Link to='/createpost' className='bg-green text-white font-bold py-2 px-4 rounded text-center'>Ajout de Post BTN</Link>
+          <Link to='/post' className='bg-green text-white font-bold py-2 px-4 rounded text-center'>Liste des posts</Link>
+          <Link to='/createpost' className='bg-green text-white font-bold py-2 px-4 rounded text-center'>Ajout de Post</Link>
+        </div>
+      </div>
+
+      {/* Section Candidatures */}
+      <div className="w-4/6 mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Candidatures</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Link to='/applications' className='bg-blue-500 text-white font-bold py-2 px-4 rounded text-center'>Voir les candidatures</Link>
+        </div>
+      </div>
+
+      {/* Section Recommandations */}
+      <div className="w-4/6 mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Recommandations</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Link to='/recommendations' className='bg-purple-500 text-white font-bold py-2 px-4 rounded text-center'>Recommandations de projets</Link>
         </div>
       </div>
 
@@ -49,7 +65,7 @@ const Home = () => {
       <div className="w-4/6 mb-8">
         <h2 className="text-2xl font-semibold mb-4">Profil</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Link to={`/account/${id}`} className='bg-orange text-white font-bold py-2 px-4 rounded text-center'>Mon profil BTN</Link>
+          <Link to={`/account/${id}`} className='bg-orange text-white font-bold py-2 px-4 rounded text-center'>Mon profil</Link>
         </div>
       </div>
 

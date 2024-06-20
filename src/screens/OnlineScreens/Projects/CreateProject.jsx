@@ -79,9 +79,6 @@ const CreateProject = () => {
               className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
             >
               <option value="1">Project</option>
-              <option value="2">Participation</option>
-              <option value="3">Inspiration</option>
-              <option value="4">Personal Realization</option>
             </select>
           </div>
           <input type="hidden" name="created_date" value={new Date().toISOString().split('T')[0]} />

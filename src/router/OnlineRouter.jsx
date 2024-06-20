@@ -9,6 +9,7 @@ import Editinfo from "../screens/OnlineScreens/Account/Editinfo";
 import Settings from "../screens/OnlineScreens/Account/Settings";
 import CreatePost from "../screens/OnlineScreens/Posts/CreatePost";
 import CreateProject from "../screens/OnlineScreens/Projects/CreateProject";
+import EditProject from "../screens/OnlineScreens/Projects/EditProject";
 
 const OnlineRouter = createBrowserRouter([
     {
@@ -51,6 +52,10 @@ const OnlineRouter = createBrowserRouter([
             {
                 path: "/CreateProject",
                 element: <CreateProject />
+            },
+            {
+                path: "/EditProject/:id",
+                element: <EditProject />
             }
             
         ]

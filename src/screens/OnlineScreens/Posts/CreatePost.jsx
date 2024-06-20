@@ -45,6 +45,7 @@ const CreatePost = () => {
     }
   };
 
+  console.log({ title, text, userId, type });
   return (
     <div className='flex flex-1 flex-col h-screen justify-start items-center bg-white'>
       <h2 className='text-black font-bold text-xl py-5'>Créer un post</h2>
@@ -70,6 +71,7 @@ const CreatePost = () => {
         </div>
         <input type="hidden" name="created_date" value={new Date().toISOString().split('T')[0]} />
         <input type="hidden" name="updated_date" value={new Date().toISOString()} />
+        <input type="hidden" name="user_id" value={userId} /> {/* Champ caché pour user_id */}
         <div className='flex items-center justify-center pt-5'>
           {isLoading ? <ButtonLoader /> :
             <button type='submit' className='bg-orange hover:bg-orange_top text-white font-bold py-2 px-4 rounded'>

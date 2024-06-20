@@ -32,6 +32,9 @@ const Posts = () => {
           return post;
         }));
 
+        // Trier les posts par date de création décroissante
+        //postsWithMedia.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
         setPosts(postsWithMedia);
         setFilteredPosts(postsWithMedia);
       } catch (error) {
@@ -61,13 +64,14 @@ const Posts = () => {
     }
   };
 
+  console.log(filteredPosts);
   if (loading) return <PageLoader />;
 
   return (
     <div className="flex flex-col items-center h-screen overflow-y-auto p-4 pb-20">
       {/* Barre de navigation et icône de création de post */}
       <div className="p-4 w-full flex justify-between items-center">
-        <h1 className="text-2xl text-orange font-bold">Projets</h1>
+        <h1 className="text-2xl text-orange font-bold">Posts</h1>
         <Link to="/CreatePost">
           <img src="../../../../documentation/svg/plus.svg" alt="Créer un post" className="w-8 h-8" />
         </Link>
@@ -79,9 +83,9 @@ const Posts = () => {
         <button onClick={() => handleFilterChange(TYPE_INSPIRATION)} className={`px-4 py-2 rounded-full ${filter === TYPE_INSPIRATION ? 'bg-orange text-white' : 'bg-gray-300'}`}>Inspirations</button>
         <button onClick={() => handleFilterChange(TYPE_REALIZATION)} className={`px-4 py-2 rounded-full ${filter === TYPE_REALIZATION ? 'bg-orange text-white' : 'bg-gray-300'}`}>Réalisations</button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full px-4 ">
         {filteredPosts.map(post => (
-          <div key={post.id} className="bg-white shadow-md rounded overflow-hidden" onClick={() => handlePostClick(post)}>
+          <div key={post.id} className="bg-white shadow-md rounded overflow-hidden border-2 border-orange" onClick={() => handlePostClick(post)}>
             {post.mediaDetails && (
               <img src={`http://api_kigo.lndo.site/images/postImages/${post.mediaDetails.url_img}`} 
                 alt={post.mediaDetails.label} 
@@ -91,6 +95,7 @@ const Posts = () => {
             <div className="p-4">
               <h2 className="text-lg font-bold">{post.title}</h2>
               <p className="text-gray-600">{post.text.slice(0, 100)}...</p>
+              <p className="text-sm text-gray-500">Posté le {new Date(post?.created_date).toLocaleDateString()}</p>
             </div>
           </div>
         ))}
@@ -104,6 +109,7 @@ const Posts = () => {
             </button>
             <h2 className="text-2xl font-bold mb-4">{selectedPost.title}</h2>
             <p className="mb-4">{selectedPost.text}</p>
+            <p className="text-sm text-gray-500">Posté le {new Date(selectedPost.created_date).toLocaleDateString()}</p>
             {selectedPost.mediaDetails && (
               <img src={`http://api_kigo.lndo.site/images/postImages/${selectedPost.mediaDetails.url_img}`} 
                 alt={selectedPost.mediaDetails.label} 
