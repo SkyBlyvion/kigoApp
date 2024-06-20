@@ -13,27 +13,26 @@ const App = () => {
 
   // on recupere le hook de navigation
   const navigate = useNavigate();
-  const {signOut} = useAuthContext();
-  
+  const { signOut } = useAuthContext();
+
   const fetchUser = async () => {
     const user = await checkUser(userInfo);
-    if(user){
+    if (user) {
       return;
-    }else{
+    } else {
       signOut();
       navigate('/');
     }
   }
-  
+
   useEffect(() => {
     fetchUser();
   }, [userInfo])
-    
 
   return (
     <>
       <Outlet />
-      <BottomTabNav/>
+      <BottomTabNav />
     </>
   )
 }
